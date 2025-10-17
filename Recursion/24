@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct ListNode {
+    int value;
+    struct ListNode *next;
+};
+
+struct ListNode* create_linked_list(int values[], int n) {
+    if (n == 0) return NULL;
+    struct ListNode *head = malloc(sizeof(struct ListNode));
+    head->value = values[0];
+    head->next = NULL;
+    struct ListNode *current = head;
+    for (int i = 1; i < n; i++) {
+        current->next = malloc(sizeof(struct ListNode));
+        current = current->next;
+        current->value = values[i];
+        current->next = NULL;
+    }
+    return head;
+}
+
+void print_linked_list(struct ListNode *head) {
+    if (!head) {
+        printf("[]\n");
+        return;
+    }
+    printf("[");
+    while (head) {
+        printf("%d", head->value);
+        if (head->next) printf(",");
+        head = head->next;
+    }
+    printf("]\n");
+}
+
+// Approach: Swap adjacent nodes by re-linking pointers (without changing node values)
+struct ListNode* swap_pairs(struct ListNode* head) {
+    struct ListNode dummy;
+    dummy.next = head;
+    struct ListNode *prev = &dummy;
+
+    while (head && head->next) {
+        struct ListNode *first = head;
+        struct ListNode *second = head->next;
+
+        prev->next = second;
+        first->next = second->next;
+        second->next = first;
+
+        prev = first;
+        head = first->next;
+    }
+    return dummy.next;
+}
+
+int main() {
+    printf("=== Swap Nodes in Pairs ===\n\n");
+
+    int vals1[] = {1,2,3,4};
+    struct ListNode *head = create_linked_list(vals1, 4);
+    printf("Input: ");
+    print_linked_list(head);
+    head = swap_pairs(head);
+    printf("Output: ");
+    print_linked_list(head);
+    printf("\n");
+
+    int vals2[] = {};
+    head = create_linked_list(vals2, 0);
+    printf("Input: ");
+    print_linked_list(head);
+    head = swap_pairs(head);
+    printf("Output: ");
+    print_linked_list(head);
+    printf("\n");
+
+    int vals3[] = {1};
+    head = create_linked_list(vals3, 1);
+    printf("Input: ");
+    print_linked_list(head);
+    head = swap_pairs(head);
+    printf("Output: ");
+    print_linked_list(head);
+    printf("\n");
+
+    int vals4[] = {1,2,3};
+    head = create_linked_list(vals4, 3);
+    printf("Input: ");
+    print_linked_list(head);
+    head = swap_pairs(head);
+    printf("Output: ");
+    print_linked_list(head);
+
+    return 0;
+}
